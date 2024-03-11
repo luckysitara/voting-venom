@@ -45,5 +45,7 @@ Additional Notes
 Ensure that you have a Paystack account and obtain the test secret key for testing purposes.
 Make sure to test the plugin in a staging environment before deploying it to a live website.
 Check Paystack documentation for information on setting up payment webhooks for handling payment verification.
+
+
 AUTHOR: 
 # BUGHACKER
