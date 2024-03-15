@@ -71,6 +71,59 @@ function ewvwp_shortcode( $atts, $content = null ){
 
 }
 add_shortcode( 'ewvwp_plugin', 'ewvwp_shortcode' );
+// Function to fetch users from 'contestants' table and add them as candidates
+function fetch_contestants_and_add_candidates() {
+    global $wpdb;
+
+    // Get contestants from WordPress database (assuming your table is named 'wp_contestants')
+    $contestants = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}contestants");
+
+    if ($contestants) {
+        // Check if Voting-With-Payment plugin is active
+        if (class_exists('Voting_With_Payment')) {
+            foreach ($contestants as $contestant) {
+                // Check if contestant already exists as a candidate
+                $existing_candidate = Voting_With_Payment::get_candidate_by_name($contestant->contestant_name);
+
+                if (!$existing_candidate) {
+                    // Add contestant as a candidate using Voting-With-Payment function
+                    Voting_With_Payment::add_candidate($contestant->contestant_name);
+                }
+            }
+        }
+    }
+}
+
+// Hook the function to a suitable WordPress action, such as 'admin_init' or 'init'
+add_action('admin_init', 'fetch_contestants_and_add_candidates');
+
+// Function to update plugin's candidate list when a new user is added to 'contestants' table
+function update_candidates_on_new_contestant($user_id) {
+    global $wpdb;
+
+    // Get user data
+    $user_info = get_userdata($user_id);
+
+    // Check if Voting-With-Payment plugin is active
+    if (class_exists('Voting_With_Payment')) {
+        // Check if user is a contestant (you'll need to define your logic for this)
+        if (user_is_contestant($user_info)) {
+            // Get contestant name
+            $contestant_name = $user_info->first_name . ' ' . $user_info->last_name;
+
+            // Check if contestant already exists as a candidate
+            $existing_candidate = Voting_With_Payment::get_candidate_by_name($contestant_name);
+
+            if (!$existing_candidate) {
+                // Add contestant as a candidate using Voting-With-Payment function
+                Voting_With_Payment::add_candidate($contestant_name);
+            }
+        }
+    }
+}
+
+// Hook the function to the 'user_register' action to update candidates when a new user is registered as a contestant
+add_action('user_register', 'update_candidates_on_new_contestant');
 
 
 function ewvwp_scripts(){
