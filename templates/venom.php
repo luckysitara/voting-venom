@@ -5,23 +5,23 @@ $taxonomy_id = $contest;
 
 if($contest == "all"){
 	$args = array(
-		'post_type' => 'ewvwp',
+		'post_type' => 'venom',
 	    'post_status' => 'publish',
-	    'posts_per_page' => get_option( 'ewvwp_no_of_candidate_per_page' ) ? get_option( 'ewvwp_no_of_candidate_per_page' ) : 10, 
+	    'posts_per_page' => get_option( 'venom_no_of_candidate_per_page' ) ? get_option( 'venom_no_of_candidate_per_page' ) : 10, 
 	    'orderby' => 'title', 
 	    'order' => 'ASC', 
 	);
 
 } else {
 	$args = array(  
-	    'post_type' => 'ewvwp',
+	    'post_type' => 'venom',
 	    'post_status' => 'publish',
-	    'posts_per_page' => get_option( 'ewvwp_no_of_candidate_per_page' ) ? get_option( 'ewvwp_no_of_candidate_per_page' ) : 10, 
+	    'posts_per_page' => get_option( 'venom_no_of_candidate_per_page' ) ? get_option( 'venom_no_of_candidate_per_page' ) : 10, 
 	    'orderby' => 'title', 
 	    'order' => 'ASC', 
 	    'tax_query' => array(
 		    array(
-		    'taxonomy' => 'ewvwp-category',
+		    'taxonomy' => 'venom-category',
 		    'field' => 'term_id',
 		    'terms' => $contest,
 		     ),
@@ -31,8 +31,8 @@ if($contest == "all"){
 
 $loop = new WP_Query( $args );
 
-if(!empty(get_option('ewvwp_template'))){
-	$template = get_option('ewvwp_template');
+if(!empty(get_option('venom_template'))){
+	$template = get_option('venom_template');
 } else {
 	$template = 1;
 }

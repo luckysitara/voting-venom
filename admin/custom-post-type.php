@@ -1,30 +1,28 @@
 <?php
 
-
 @ob_start();
-add_action( 'init', 'ewvwp_custom_post_type' );
+add_action( 'init', 'venom_custom_post_type' );
 add_action( 'init', 'tr_create_my_taxonomy' );
-add_filter( 'manage_ewvwp_posts_columns', 'ewvwp_set_columns_name' );
-add_filter("manage_edit-ewvwp-category_columns", 'ewvwp_taxonomies_columns'); 
-add_action( 'manage_ewvwp_posts_custom_column', 'ewvwp_custom_columns', 10, 2 );
-add_filter("manage_ewvwp-category_custom_column", 'ewvwp_manage_taxonomies_columns', 10, 3);
-add_action( 'add_meta_boxes', 'ewvwp_add_meta_box' );
-add_action( 'save_post', 'ewvwp_save_nickname_data' );
-add_action( 'save_post', 'ewvwp_save_age_data' );
-
-add_action( 'save_post', 'ewvwp_save_vote_data' );
+add_filter( 'manage_venom_posts_columns', 'venom_set_columns_name' );
+add_filter("manage_edit-venom-category_columns", 'venom_taxonomies_columns'); 
+add_action( 'manage_venom_posts_custom_column', 'venom_custom_columns', 10, 2 );
+add_filter("manage_venom-category_custom_column", 'venom_manage_taxonomies_columns', 10, 3);
+add_action( 'add_meta_boxes', 'venom_add_meta_box' );
+add_action( 'save_post', 'venom_save_nickname_data' );
+add_action( 'save_post', 'venom_save_age_data' );
+add_action( 'save_post', 'venom_save_vote_data' );
 
 add_filter('gettext','custom_enter_title');
 
-add_action( 'wp_loaded', 'ewvwp_wpse_19240_change_place_labels', 20 );
+add_action( 'wp_loaded', 'venom_wpse_19240_change_place_labels', 20 );
 
-add_filter('post_updated_messages', 'ewvwp_updated_messages');
+add_filter('post_updated_messages', 'venom_updated_messages');
 
 
-function ewvwp_updated_messages( $messages ) {
+function venom_updated_messages( $messages ) {
 	global $post, $post_ID;
 
-	$messages['ewvwp'] = array(
+	$messages['venom'] = array(
     0 => '', // Unused. Messages start at index 1.
     1 => sprintf( __('Candidate updated.') ),
     //1 => sprintf( __('Candidate updated. <a href="%s">View Candidate</a>'), esc_url( get_permalink($post_ID) ) ),
@@ -71,13 +69,13 @@ function tr_create_my_taxonomy() {
          'show_ui'           => true,
          'show_admin_column' => true,
          'query_var'         => true,
-         'rewrite'           => [ 'slug' => 'ewvwp-category' ],
+         'rewrite'           => [ 'slug' => 'venom-category' ],
      );
-	register_taxonomy( 'ewvwp-category', [ 'ewvwp' ], $args );
+	register_taxonomy( 'venom-category', [ 'venom' ], $args );
 }
 
 
-function ewvwp_taxonomies_columns($theme_columns) {
+function venom_taxonomies_columns($theme_columns) {
 	$new_columns = array(
 		'cb' => '<input type="checkbox" />',
 		'name' => __('Contest'),
@@ -89,10 +87,10 @@ function ewvwp_taxonomies_columns($theme_columns) {
 }
 
 
-function ewvwp_manage_taxonomies_columns($out, $column_name, $theme_id) {
+function venom_manage_taxonomies_columns($out, $column_name, $theme_id) {
 	switch ($column_name) {
 		case 'shortcode':
-		$out .= '[plugin contest="'.$theme_id.'"]'; 
+		$out .= '[venom_plugin contest="'.$theme_id.'"]'; 
 		break;
 
 		default:
@@ -105,16 +103,16 @@ function custom_enter_title( $input ) {
 
 	global $post_type;
 
-	if( is_admin() && 'Add title' == $input && 'ewvwp' == $post_type )
+	if( is_admin() && 'Add title' == $input && 'venom' == $post_type )
 		return 'Enter Fullname';
 
 	return $input;
 }
 
 
-function ewvwp_wpse_19240_change_place_labels()
+function venom_wpse_19240_change_place_labels()
 {
-	$p_object = get_post_type_object( 'ewvwp' );
+	$p_object = get_post_type_object( 'venom' );
 
 	if ( ! $p_object )
 		return FALSE;
@@ -134,10 +132,10 @@ function ewvwp_wpse_19240_change_place_labels()
 }
 
 
-function ewvwp_custom_post_type(){
+function venom_custom_post_type(){
 	$labels = array(
-		'taxonomies' => 'ewvwp-category',
-		'name'				=>	'Voting-Payment',
+		'taxonomies' => 'venom-category',
+		'name'				=>	'Voting With Payment',
 		'singular_name'		=>	'Voting-Payment',
 		'menu_name'			=>	'Voting-Payment',
 		'name_admin_bar'	=>	'Voting-Payment'
@@ -155,10 +153,10 @@ function ewvwp_custom_post_type(){
 		'supports'	=>	array('title', 'thumbnail')
 	);
 
-	register_post_type( 'ewvwp', $args );
+	register_post_type( 'venom', $args );
 }
 
-function ewvwp_set_columns_name( $columns ) {
+function venom_set_columns_name( $columns ) {
 	$clientColumns = array();
 	$clientColumns['cb'] = "<input type=\"checkbox\" />";
 	$clientColumns['title'] = 'Full Name';
@@ -171,26 +169,26 @@ function ewvwp_set_columns_name( $columns ) {
 }
 
 
-function ewvwp_custom_columns( $columns, $post_id ) {
+function venom_custom_columns( $columns, $post_id ) {
 
 	switch ( $columns ) {
 		case 'nickname':
-		$value = get_post_meta( $post_id, '_ewvwp_nickname_value_key', true );
+		$value = get_post_meta( $post_id, '_venom_nickname_value_key', true );
 		echo '<strong>'.$value.'</strong>';
 		break;
 
 		case 'age':
-		$value = get_post_meta( $post_id, '_ewvwp_age_value_key', true );
+		$value = get_post_meta( $post_id, '_venom_age_value_key', true );
 		echo '<strong>'.$value.'</strong>';
 		break;
 
 		case 'votes':
-		$value = get_post_meta( $post_id, '_ewvwp_vote_value_key', true );
+		$value = get_post_meta( $post_id, '_venom_vote_value_key', true );
 		echo '<strong>'.$value.'</strong>';
 		break;
 
 		case 'taxonomy':
-		$terms = get_the_terms( $post_id, 'ewvwp-category' );
+		$terms = get_the_terms( $post_id, 'venom-category' );
 		$draught_links = array();
 		foreach ( $terms as $term ) {
 			$draught_links[] = $term->name;
@@ -202,46 +200,46 @@ function ewvwp_custom_columns( $columns, $post_id ) {
 
 }
 
-function ewvwp_add_meta_box(){
-	add_meta_box( 'ewvwp_nickname', 'Nickname', 'ewvwp_nickname_callback', 'ewvwp', 'normal' );
-	add_meta_box( 'ewvwp_age', 'Age', 'ewvwp_age_callback', 'ewvwp', 'normal' );
-	add_meta_box( 'ewvwp_votes', 'Number of Votes', 'ewvwp_vote_callback', 'ewvwp', 'normal' );
-	
+function venom_add_meta_box(){
+	add_meta_box( 'venom_nickname', 'Nickname', 'venom_nickname_callback', 'venom', 'normal' );
+	add_meta_box( 'venom_age', 'Age', 'venom_age_callback', 'venom', 'normal' );
+	add_meta_box( 'venom_votes', 'Number of Votes', 'venom_vote_callback', 'venom', 'normal' );
 }
 
 
-function ewvwp_nickname_callback( $post ){
-	wp_nonce_field( 'ewvwp_save_nickname_data', 'ewvwp_nickname_meta_box_nonce' );
-	$value = get_post_meta( $post->ID, '_ewvwp_nickname_value_key', true );
+function venom_nickname_callback( $post ){
+	wp_nonce_field( 'venom_save_nickname_data', 'venom_nickname_meta_box_nonce' );
+	$value = get_post_meta( $post->ID, '_venom_nickname_value_key', true );
 
-	echo '<label for="ewvwp_nickname_field"> Nick Name </label><br><br> ';
-	echo '<input type="text" name="ewvwp_nickname_field" id="ewvwp_nickname_field" value="'. esc_attr( $value ).'" size="25"/>';
+	echo '<label for="venom_nickname_field"> Nick Name </label><br><br> ';
+	echo '<input type="text" name="venom_nickname_field" id="venom_nickname_field" value="'. esc_attr( $value ).'" size="25"/>';
 }
 
-function ewvwp_vote_callback( $post ){
-	wp_nonce_field( 'ewvwp_save_vote_data', 'ewvwp_vote_meta_box_nonce' );
-	$value = get_post_meta( $post->ID, '_ewvwp_vote_value_key', true );
+function venom_vote_callback( $post ){
+	wp_nonce_field( 'venom_save_vote_data', 'venom_vote_meta_box_nonce' );
+	$value = get_post_meta( $post->ID, '_venom_vote_value_key', true );
 
 	$final_value = (!empty($value)) ? $value : 0;
 
-	echo '<label for="ewvwp_vote_field"> Number of Votes </label><br><br> ';
-	echo '<input type="number" name="ewvwp_vote_field" id="ewvwp_vote_field" value="'. esc_attr( $final_value ).'" size="25"/>';
+	echo '<label for="venom_vote_field"> Number of Votes </label><br><br> ';
+	echo '<input type="number" name="venom_vote_field" id="venom_vote_field" value="'. esc_attr( $final_value ).'" size="25"/>';
 }
 
-function ewvwp_age_callback( $post ){
-	wp_nonce_field( 'ewvwp_save_age_data', 'ewvwp_age_meta_box_nonce' );
-	$value = get_post_meta( $post->ID, '_ewvwp_age_value_key', true );
+function venom_age_callback( $post ){
+	wp_nonce_field( 'venom_save_age_data', 'venom_age_meta_box_nonce' );
+	$value = get_post_meta( $post->ID, '_venom_age_value_key', true );
 
-	echo '<label for="ewvwp_age_field"> Ages </label><br><br> ';
-	echo '<input type="number" name="ewvwp_age_field" id="ewvwp_age_field" value="'. esc_attr( $value ).'" size="25"/>';
+	echo '<label for="venom_age_field"> Ages </label><br><br> ';
+	echo '<input type="number" name="venom_age_field" id="venom_age_field" value="'. esc_attr( $value ).'" size="25"/>';
 }
 
-function ewvwp_save_nickname_data( $post_id ){
 
-	if (! isset( $_POST['ewvwp_nickname_meta_box_nonce'] ) ) {
+function venom_save_nickname_data( $post_id ){
+
+	if (! isset( $_POST['venom_nickname_meta_box_nonce'] ) ) {
 		return;
 	}
-	if (! wp_verify_nonce( $_POST['ewvwp_nickname_meta_box_nonce'], 'ewvwp_save_nickname_data' ) ) {
+	if (! wp_verify_nonce( $_POST['venom_nickname_meta_box_nonce'], 'venom_save_nickname_data' ) ) {
 		return;
 	}
 	if ( define('DOING_AUTOSAVE') && DOING_AUTOSAVE ) {
@@ -250,22 +248,22 @@ function ewvwp_save_nickname_data( $post_id ){
 	if (! current_user_can( 'edit_post', $post_id )) {
 		return;
 	}
-	if (! isset( $_POST['ewvwp_nickname_field'] )) {
+	if (! isset( $_POST['venom_nickname_field'] )) {
 		return;
 	}
 
-	$my_data = sanitize_text_field( $_POST['ewvwp_nickname_field'] );
+	$my_data = sanitize_text_field( $_POST['venom_nickname_field'] );
 
-	update_post_meta( $post_id , '_ewvwp_nickname_value_key' , $my_data );
+	update_post_meta( $post_id , '_venom_nickname_value_key' , $my_data );
 
 }
 
-function ewvwp_save_age_data( $post_id ){
+function venom_save_age_data( $post_id ){
 
-	if (! isset( $_POST['ewvwp_age_meta_box_nonce'] ) ) {
+	if (! isset( $_POST['venom_age_meta_box_nonce'] ) ) {
 		return;
 	}
-	if (! wp_verify_nonce( $_POST['ewvwp_age_meta_box_nonce'], 'ewvwp_save_age_data' ) ) {
+	if (! wp_verify_nonce( $_POST['venom_age_meta_box_nonce'], 'venom_save_age_data' ) ) {
 		return;
 	}
 	if ( define('DOING_AUTOSAVE') && DOING_AUTOSAVE ) {
@@ -274,25 +272,24 @@ function ewvwp_save_age_data( $post_id ){
 	if (! current_user_can( 'edit_post', $post_id )) {
 		return;
 	}
-	if (! isset( $_POST['ewvwp_age_field'] )) {
+	if (! isset( $_POST['venom_age_field'] )) {
 		return;
 	}
 
-	$my_data = sanitize_text_field( $_POST['ewvwp_age_field'] );
+	$my_data = sanitize_text_field( $_POST['venom_age_field'] );
 
-	update_post_meta( $post_id , '_ewvwp_age_value_key' , $my_data );
+	update_post_meta( $post_id , '_venom_age_value_key' , $my_data );
 
 }
 
 
 
+function venom_save_vote_data( $post_id ){
 
-function ewvwp_save_vote_data( $post_id ){
-
-	if (! isset( $_POST['ewvwp_vote_meta_box_nonce'] ) ) {
+	if (! isset( $_POST['venom_vote_meta_box_nonce'] ) ) {
 		return;
 	}
-	if (! wp_verify_nonce( $_POST['ewvwp_vote_meta_box_nonce'], 'ewvwp_save_vote_data' ) ) {
+	if (! wp_verify_nonce( $_POST['venom_vote_meta_box_nonce'], 'venom_save_vote_data' ) ) {
 		return;
 	}
 	if ( define('DOING_AUTOSAVE') && DOING_AUTOSAVE ) {
@@ -301,13 +298,13 @@ function ewvwp_save_vote_data( $post_id ){
 	if (! current_user_can( 'edit_post', $post_id )) {
 		return;
 	}
-	if (! isset( $_POST['ewvwp_vote_field'] )) {
+	if (! isset( $_POST['venom_vote_field'] )) {
 		return;
 	}
 
-	$my_data = sanitize_text_field( $_POST['ewvwp_vote_field'] );
+	$my_data = sanitize_text_field( $_POST['venom_vote_field'] );
 
-	update_post_meta( $post_id , '_ewvwp_vote_value_key' , $my_data );
+	update_post_meta( $post_id , '_venom_vote_value_key' , $my_data );
 
 }
 

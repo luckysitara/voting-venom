@@ -3,14 +3,14 @@
 /*
 
     ========================
-        AJAX FUNCTIONS FOR VOTING-PLUGIN
+        AJAX FUNCTIONS
     ========================
 */
 
-add_action('wp_ajax_nopriv_ewvwp_form_ajax', 'ewvwp_ajax');
-add_action('wp_ajax_ewvwp_form_ajax', 'ewvwp_ajax');
+add_action('wp_ajax_nopriv_venom_form_ajax', 'venom_ajax');
+add_action('wp_ajax_venom_form_ajax', 'venom_ajax');
 
-function ewvwp_ajax()
+function venom_ajax()
 {
     $quantity = intval($_POST['quantity']);
     $userID = intval($_POST['userID']);
@@ -24,7 +24,7 @@ function ewvwp_ajax()
       $headers = array(
         'Content-Type'  => 'application/json',
         'Cache-Control' => 'no-cache',
-        'Authorization' => 'Bearer ' . get_option( 'ewvwp_paystack_secret_key' ),
+        'Authorization' => 'Bearer ' . get_option( 'venom_paystack_secret_key' ),
       );
 
       $args = array(
@@ -41,7 +41,7 @@ function ewvwp_ajax()
         if ( 'success' == $paystack_response['data']['status'] ) {
 
             $post_status = "publish"; //publish, draft, etc
-            $post_type = "ewvwp"; // or whatever post type desired
+            $post_type = "venom"; // or whatever post type desired
 
             /* Attempt to find post id by post name if it exists */
             $found_post = get_post( $userID );
@@ -58,10 +58,10 @@ function ewvwp_ajax()
 
             } else {
         
-                $vote = get_post_meta($userID, "_ewvwp_vote_value_key", true);
+                $vote = get_post_meta($userID, "_venom_vote_value_key", true);
 
                 $total = $vote + $quantity;
-                update_post_meta( $userID, '_ewvwp_vote_value_key', $total );
+                update_post_meta( $userID, '_venom_vote_value_key', $total );
 
                 $result = array(
                   'success' => true,
