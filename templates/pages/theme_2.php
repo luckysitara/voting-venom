@@ -242,7 +242,7 @@
                 email: email,
                 amount: amount * 100, // the amount value is multiplied by 100 to convert to the lowest currency unit
                 currency: 'NGN', // Use GHS for Ghana Cedis or USD for US Dollars
-                reference: 'Easy Wp Voting With Payment', // Replace with a reference you generated
+                reference: 'Voting-Payment', // Replace with a reference you generated
                 callback: function(response) {
                 //this happens after the payment is completed successfully
                 var reference = response.reference;

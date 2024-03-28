@@ -336,13 +336,13 @@ div.floating-cart .venom-product-front{width:100%; top:0; left:0;}
 	box-venom-shadow:0px 5px 31px -1px rgba(0, 0, 0, 0.15);	
 }
 
-.easy-wp-voting-form {
+.venom-form {
     max-width: 360px;
     margin: 0 auto 100px;
     padding: 45px;
     text-align: center;
   }
-  .easy-wp-voting-form .easy-wp-voting-form-input {
+  .venom-form .venom-form-input {
     font-family: "Roboto", sans-serif;
     outline: 0;
     background: #f2f2f2;
@@ -353,7 +353,7 @@ div.floating-cart .venom-product-front{width:100%; top:0; left:0;}
     box-sizing: border-box;
     font-size: 14px;
 }
-  .easy-wp-voting-form button {
+  .venom-form button {
     font-family: "Roboto", sans-serif;
     text-transform: uppercase;
     outline: 0;

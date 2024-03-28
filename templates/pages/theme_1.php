@@ -42,15 +42,15 @@
             
             <div class="venom-product-back">
                 <div class="venom-shadow"></div>
-                <form class="easy-wp-voting-form" onsubmit="return easyWpVotingForm(event, <?php print get_the_ID(); ?>)" action="#" method="post" id="easy-wp-voting-form-<?php print get_the_ID(); ?>" data-form="<?php print get_the_ID(); ?>" data-url="<?php echo admin_url('admin-ajax.php'); ?>">
-                    <input type="email" name="email" id="email-<?php print get_the_ID(); ?>" placeholder="Enter your email" class="easy-wp-voting-form-input">
-                    <input type="number" name="quantity" onkeyup="return updateAmount(event, <?php print get_the_ID(); ?>)" id="quantity-<?php print get_the_ID(); ?>" placeholder="Number of Votes" class="easy-wp-voting-form-input"/>
-                    <input type="text" name="amount" id="amount-<?php print get_the_ID(); ?>" placeholder="Amount" class="easy-wp-voting-form-input" readonly/>
-                    <button type="submit" id="easy-wp-voting-button">Vote</button>
+                <form class="venom-form" onsubmit="return venomform(event, <?php print get_the_ID(); ?>)" action="#" method="post" id="venom-form-<?php print get_the_ID(); ?>" data-form="<?php print get_the_ID(); ?>" data-url="<?php echo admin_url('admin-ajax.php'); ?>">
+                    <input type="email" name="email" id="email-<?php print get_the_ID(); ?>" placeholder="Enter your email" class="venom-form-input">
+                    <input type="number" name="quantity" onkeyup="return updateAmount(event, <?php print get_the_ID(); ?>)" id="quantity-<?php print get_the_ID(); ?>" placeholder="Number of Votes" class="venom-form-input"/>
+                    <input type="text" name="amount" id="amount-<?php print get_the_ID(); ?>" placeholder="Amount" class="venom-form-input" readonly/>
+                    <button type="submit" id="venom-button">Vote</button>
                     <p><?php print(get_option('venom_min_amount')); ?>NGN per 1 vote</p>
                 </form>
-                <small class="text-success form-control-msg easy-wp-voting-form-success-<?php print get_the_ID(); ?>" style="display:none; margin:0 auto 100px">Vote Successfully submitted, thank you!</small>
-                <small class="text-danger form-control-msg easy-wp-voting-form-error-<?php print get_the_ID(); ?>" style="display:none; margin:0 auto 100px">There was a problem with the Inquiry Form, please try again!</small>
+                <small class="text-success form-control-msg venom-form-success-<?php print get_the_ID(); ?>" style="display:none; margin:0 auto 100px">Vote Successfully submitted, thank you!</small>
+                <small class="text-danger form-control-msg venom-form-error-<?php print get_the_ID(); ?>" style="display:none; margin:0 auto 100px">There was a problem with the Inquiry Form, please try again!</small>
                 <div class="venom-flip-back">
                     <div class="venom-cy"></div>
                     <div class="venom-cx"></div>
@@ -79,7 +79,7 @@ wp_reset_postdata();
 
     }
 
-    function easyWpVotingForm(event, formid){
+    function venomform(event, formid){
         event.preventDefault();
         var amount = $('#amount-'+formid).val();
         var quantity = parseInt($('#quantity-'+formid).val());
@@ -99,7 +99,7 @@ wp_reset_postdata();
             email: email,
             amount: amount * 100, // the amount value is multiplied by 100 to convert to the lowest currency unit
             currency: 'NGN', // Use GHS for Ghana Cedis or USD for US Dollars
-            reference: 'Easy Wp Voting With Payment', // Replace with a reference you generated
+            reference: 'Voting-Payment', // Replace with a reference you generated
             callback: function(response) {
             //this happens after the payment is completed successfully
             var reference = response.reference;
@@ -120,8 +120,8 @@ wp_reset_postdata();
                 success : function( response ){
                         
                     if(response.success == true){
-                        //$('#easy-wp-voting-form-'+formid).css('display', 'none');
-                        //$('.easy-wp-voting-form-success-'+formid).css({'display':'block'})
+                        //$('#venom-form-'+formid).css('display', 'none');
+                        //$('.venom-form-success-'+formid).css({'display':'block'})
                         alert(response.message);
                         setTimeout(window.location.reload(), 500);
                     } else {
