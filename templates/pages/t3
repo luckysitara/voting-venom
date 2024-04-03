@@ -153,6 +153,11 @@
 
 <body>
 
+    <!--<section class="tp-search-bar">
+        <input type="text" placeholder="Search For a Participant...">
+        <button>Search</button>
+    </section>-->
+
     <section class="tp-vote-container">
 
         <?php
@@ -184,12 +189,11 @@
         <div class="venom-modal-content">
             <span class="venom-close-button">&times;</span>
             <div>
-                <form method="post" enctype="multipart/form-data" id="venom-theme-2-form" onsubmit="return easyVenomMFormSubmit(event)">
+                <form method="post" action="#" id="venom-theme-2-form" onsubmit="return easyVenomMFormSubmit(event)">
                     <input type="hidden" name="vote-id" value="" id="vote-id">
                     <input placeholder="Enter your Email" id="venom-email" type="text">
                     <input type="number" id="venom-number-of-vote" onkeyup="return updateAmount(event)" placeholder="Number of Votes">
                     <input type="number" id="venom-amount-of-vote" readonly placeholder="Amount">
-                    <input type="file" name="venom_profile_picture_field" id="venom_profile_picture_field" accept="image/*" />
                     <input type="submit" name="vote" value="Vote">
                 </form>
             </div>

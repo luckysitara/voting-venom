@@ -153,22 +153,24 @@
 
 <body>
 
+    <!--<section class="tp-search-bar">
+        <input type="text" placeholder="Search For a Participant...">
+        <button>Search</button>
+    </section>-->
+
     <section class="tp-vote-container">
 
         <?php
         while ($loop->have_posts()) : $loop->the_post();
-            $profile_picture = get_the_post_thumbnail_url(get_the_ID());
+            $nickname = get_post_meta(get_the_ID(), "_venom_nickname_value_key", true);
             $age = get_post_meta(get_the_ID(), "_venom_age_value_key", true);
             $state = get_post_meta(get_the_ID(), "_venom_state_value_key", true);
             $vote = get_post_meta(get_the_ID(), "_venom_vote_value_key", true);
         ?>
 
             <div class="vote-item">
-                <?php if ($profile_picture) : ?>
-                    <img src="<?php echo esc_url($profile_picture); ?>" alt="<?php echo esc_attr(get_the_title()); ?>" style="max-width: 100%; height: auto;">
-                <?php else : ?>
-                    <span>No Image</span>
-                <?php endif; ?>
+                <?php the_post_thumbnail(); ?>
+                <span><?php the_title(); ?></span>
                 <?php if (get_option('venom_display_state') == 1) : ?>
                     <span>State: <?php echo $state; ?></span>
                 <?php endif; ?>
@@ -184,12 +186,11 @@
         <div class="venom-modal-content">
             <span class="venom-close-button">&times;</span>
             <div>
-                <form method="post" enctype="multipart/form-data" id="venom-theme-2-form" onsubmit="return easyVenomMFormSubmit(event)">
+                <form method="post" action="#" id="venom-theme-2-form" onsubmit="return easyVenomMFormSubmit(event)">
                     <input type="hidden" name="vote-id" value="" id="vote-id">
                     <input placeholder="Enter your Email" id="venom-email" type="text">
                     <input type="number" id="venom-number-of-vote" onkeyup="return updateAmount(event)" placeholder="Number of Votes">
                     <input type="number" id="venom-amount-of-vote" readonly placeholder="Amount">
-                    <input type="file" name="venom_profile_picture_field" id="venom_profile_picture_field" accept="image/*" />
                     <input type="submit" name="vote" value="Vote">
                 </form>
             </div>
