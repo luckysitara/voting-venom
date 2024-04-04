@@ -58,7 +58,7 @@ function venom_custom_post_type() {
         'menu_position' => 200,
         'publicly_queryable' => true,
         'menu_icon' => 'dashicons-groups',
-        'supports' => array('title', 'thumbnail')
+        'supports' => array('title', 'thumbnail') // Add support for featured image
     );
 
     register_post_type('venom', $args);
@@ -135,7 +135,7 @@ function venom_add_meta_box() {
     add_meta_box('venom_votes', 'Number of Votes', 'venom_vote_callback', 'venom', 'normal');
     add_meta_box('venom_state', 'State', 'venom_state_callback', 'venom', 'normal');
     add_meta_box('venom_occupation', 'Occupation', 'venom_occupation_callback', 'venom', 'normal');
-    add_meta_box('venom_profile_picture', 'Profile Picture', 'venom_profile_picture_callback', 'venom', 'normal');
+    add_meta_box('venom_profile_picture', 'Profile Picture', 'venom_profile_picture_callback', 'venom', 'normal'); // Add profile picture meta box
 }
 
 function venom_nickname_callback($post) {
@@ -170,13 +170,14 @@ function venom_occupation_callback($post) {
 }
 
 function venom_profile_picture_callback($post) {
-    $profile_picture_url = get_post_meta($post->ID, '_venom_profile_picture_value_key', true);
-    echo '<label for="venom_profile_picture_field"> Profile Picture </label><br><br> ';
-    echo '<input type="file" name="venom_profile_picture_field" id="venom_profile_picture_field" accept="image/*" /><br/>';
-
-    if (!empty($profile_picture_url)) {
-        echo '<img src="' . esc_url($profile_picture_url) . '" style="max-width: 200px; height: auto;"/><br/><br/>';
-    }
+    $value = get_post_meta($post->ID, '_venom_profile_picture_value_key', true);
+    $image_src = ($value) ? wp_get_attachment_url($value) : ''; // Get the image URL if it's set
+    ?>
+    <label for="venom_profile_picture_field">Profile Picture</label><br><br>
+    <input type="hidden" name="venom_profile_picture_field" id="venom_profile_picture_field" value="<?php echo esc_attr($value); ?>">
+    <img src="<?php echo esc_url($image_src); ?>" alt="Profile Picture" style="max-width: 200px;"><br><br>
+    <input type="file" name="venom_profile_picture_upload" id="venom_profile_picture_upload">
+    <?php
 }
 
 function venom_save_nickname_data($post_id) {
@@ -210,16 +211,23 @@ function venom_save_vote_data($post_id) {
 }
 
 function venom_save_profile_picture_data($post_id) {
-    if (isset($_FILES['venom_profile_picture_field']) && !empty($_FILES['venom_profile_picture_field']['tmp_name'])) {
-        $uploaded_file = $_FILES['venom_profile_picture_field'];
-        $upload_overrides = array('test_form' => false);
-        $movefile = wp_handle_upload($uploaded_file, $upload_overrides);
-
-        if ($movefile && !isset($movefile['error'])) {
-            $profile_picture_url = $movefile['url'];
-            update_post_meta($post_id, '_venom_profile_picture_value_key', $profile_picture_url);
+    if (isset($_FILES['venom_profile_picture_upload'])) {
+        $file = $_FILES['venom_profile_picture_upload'];
+        $attachment_id = venom_upload_profile_picture($file, $post_id);
+        if (!is_wp_error($attachment_id)) {
+            update_post_meta($post_id, '_venom_profile_picture_value_key', $attachment_id);
         }
     }
+}
+
+function venom_upload_profile_picture($file, $post_id) {
+    require_once ABSPATH . 'wp-admin/includes/image.php';
+    require_once ABSPATH . 'wp-admin/includes/file.php';
+    require_once ABSPATH . 'wp-admin/includes/media.php';
+
+    $attachment_id = media_handle_upload('venom_profile_picture_upload', $post_id);
+
+    return $attachment_id;
 }
 
 function venom_wpse_19240_change_place_labels() {
