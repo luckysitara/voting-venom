@@ -5,7 +5,7 @@
  */
 /*
 Plugin Name: Venom
-Plugin URI: https://github.com/luckisitara/voting-venom
+Plugin URI: https://github.com/luckysitara/voting-venom
 Description: Venom  allows you to create a simple voting system with payment method
 Author: Bughacker
 Version: 1.0

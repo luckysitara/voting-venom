@@ -3,8 +3,8 @@
             margin: 20px;
             padding:20px;
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            grid-gap: 1rem;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
             justify-content: center;
         }
 
@@ -14,7 +14,7 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            border: 1px solid rgb(115, 187, 8);
+            border: 1px solid #F5D429;
             
             
             
