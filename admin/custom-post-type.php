@@ -131,10 +131,10 @@ function venom_custom_post_type()
 {
     $labels = array(
         'taxonomies' => 'venom-category',
-        'name' => 'Easy WP Voting With Payment',
-        'singular_name' => 'Easy WP Voting With Payment',
-        'menu_name' => 'Easy WP Voting With Payments',
-        'name_admin_bar' => 'Easy WP Voting With Payment'
+        'name' => 'Venom-vote',
+        'singular_name' => 'Venom-vote',
+        'menu_name' => 'Venom-votes',
+        'name_admin_bar' => 'Venom-vote'
     );
 
     $args = array(
