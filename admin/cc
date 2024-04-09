@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @package Venom
  * @version 1.0
@@ -17,7 +18,6 @@ add_action('save_post', 'venom_save_age_data');
 add_action('save_post', 'venom_save_state_data');
 add_action('save_post', 'venom_save_occupation_data');
 add_action('save_post', 'venom_save_vote_data');
-add_action('save_post', 'venom_save_profile_image_data'); // Added action for saving profile picture
 
 add_filter('gettext', 'custom_enter_title');
 
@@ -162,7 +162,6 @@ function venom_set_columns_name($columns)
         'age' => 'Age',
         'occupation' => 'Occupation',
         'votes' => 'Number of votes',
-        'profile_image' => 'Profile Picture', // Added column for profile picture
         'taxonomy' => 'Contest Category',
     );
     return $clientColumns;
@@ -196,11 +195,6 @@ function venom_custom_columns($columns, $post_id)
             echo '<strong>' . $value . '</strong>';
             break;
 
-        case 'profile_image':
-            $value = get_post_meta($post_id, '_venom_profile_image_value_key', true);
-            echo '<img src="' . esc_attr($value) . '" style="max-width: 100px; height: auto;" />';
-            break;
-
         case 'taxonomy':
             $terms = get_the_terms($post_id, 'venom-category');
             $draught_links = array();
@@ -220,7 +214,6 @@ function venom_add_meta_box()
     add_meta_box('venom_votes', 'Number of Votes', 'venom_vote_callback', 'venom', 'normal');
     add_meta_box('venom_state', 'State', 'venom_state_callback', 'venom', 'normal');
     add_meta_box('venom_occupation', 'Occupation', 'venom_occupation_callback', 'venom', 'normal');
-    add_meta_box('venom_profile_image', 'Profile Picture', 'venom_profile_image_callback', 'venom', 'normal'); // New meta box for profile picture
 }
 
 function venom_nickname_callback($post)
@@ -268,35 +261,6 @@ function venom_occupation_callback($post)
 
     echo '<label for="venom_occupation_field"> Occupation </label><br><br> ';
     echo '<input type="text" name="venom_occupation_field" id="venom_occupation_field" value="' . esc_attr($value) . '" size="25"/>';
-}
-
-function venom_profile_image_callback($post)
-{
-    wp_nonce_field('venom_save_profile_image_data', 'venom_profile_image_meta_box_nonce');
-    $value = get_post_meta($post->ID, '_venom_profile_image_value_key', true);
-
-    echo '<label for="venom_profile_image_field"> Profile Picture </label><br><br> ';
-    echo '<input type="text" name="venom_profile_image_field" id="venom_profile_image_field" value="' . esc_attr($value) . '" size="25"/>';
-    echo '<input type="button" id="venom_upload_image_button" class="button" value="Upload Image" />';
-    echo '<script>
-        jQuery(document).ready(function($){
-            $("#venom_upload_image_button").click(function(e) {
-                e.preventDefault();
-                var custom_uploader = wp.media({
-                    title: "Choose Image",
-                    button: {
-                        text: "Choose Image"
-                    },
-                    multiple: false
-                });
-                custom_uploader.on("select", function() {
-                    var attachment = custom_uploader.state().get("selection").first().toJSON();
-                    $("#venom_profile_image_field").val(attachment.url);
-                });
-                custom_uploader.open();
-            });
-        });
-    </script>';
 }
 
 function venom_save_nickname_data($post_id)
@@ -413,27 +377,3 @@ function venom_save_vote_data($post_id)
 
     update_post_meta($post_id, '_venom_vote_value_key', $my_data);
 }
-
-function venom_save_profile_image_data($post_id)
-{
-    if (!isset($_POST['venom_profile_image_meta_box_nonce'])) {
-        return;
-    }
-    if (!wp_verify_nonce($_POST['venom_profile_image_meta_box_nonce'], 'venom_save_profile_image_data')) {
-        return;
-    }
-    if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
-        return;
-    }
-    if (!current_user_can('edit_post', $post_id)) {
-        return;
-    }
-    if (!isset($_POST['venom_profile_image_field'])) {
-        return;
-    }
-
-    $my_data = sanitize_text_field($_POST['venom_profile_image_field']);
-
-    update_post_meta($post_id, '_venom_profile_image_value_key', $my_data);
-}
-
