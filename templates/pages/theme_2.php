@@ -165,10 +165,17 @@
         .venom-modal-content div input{
             width: 100%;
             padding: 15px;
-            padding-left: 10px;
             border-radius: 5px;
-            border: 1px solid grey;
+            border: 1px solid #ECEBE6;
             margin-bottom: 10px;
+        }
+
+        .venom-modal-submit {
+            background-color: #F6D941;
+            color: white;
+            font-size: 20px;
+            font-weight: 600;
+            border: none;
         }
 
 
@@ -224,7 +231,7 @@
                     <input placeholder="Enter your Email" id="venom-email" type="text">
                     <input type="number" id="venom-number-of-vote" onkeyup="return updateAmount(event)" placeholder="Number of Votes">
                     <input type="number" id="venom-amount-of-vote" readonly placeholder="Amount">
-                    <input type="submit" name="vote" value="Vote">
+                    <input type="submit" name="vote" value="Vote" class="venom-modal-submit">
                 </form>
             </div>
         </div>
