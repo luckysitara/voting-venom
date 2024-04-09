@@ -6,7 +6,6 @@
  */
 
 @ob_start();
-
 add_action('init', 'venom_custom_post_type');
 add_action('init', 'tr_create_my_taxonomy');
 add_filter('manage_venom_posts_columns', 'venom_set_columns_name');
@@ -19,10 +18,11 @@ add_action('save_post', 'venom_save_age_data');
 add_action('save_post', 'venom_save_state_data');
 add_action('save_post', 'venom_save_occupation_data');
 add_action('save_post', 'venom_save_vote_data');
-add_action('add_meta_boxes', 'venom_add_profile_picture_meta_box');
-add_action('save_post', 'venom_save_profile_picture_data');
+
 add_filter('gettext', 'custom_enter_title');
+
 add_action('wp_loaded', 'venom_wpse_19240_change_place_labels', 20);
+
 add_filter('post_updated_messages', 'venom_updated_messages');
 
 function venom_updated_messages($messages)
@@ -62,7 +62,7 @@ function tr_create_my_taxonomy()
         'menu_name' => __('Contest Categories'),
     );
     $args = array(
-        'hierarchical' => true,
+        'hierarchical' => true, // make it hierarchical (like categories)
         'labels' => $labels,
         'show_ui' => true,
         'show_admin_column' => true,
@@ -131,10 +131,10 @@ function venom_custom_post_type()
 {
     $labels = array(
         'taxonomies' => 'venom-category',
-        'name' => 'Easy WP Voting With Payment',
-        'singular_name' => 'Easy WP Voting With Payment',
-        'menu_name' => 'Easy WP Voting With Payments',
-        'name_admin_bar' => 'Easy WP Voting With Payment'
+        'name' => 'Venom-vote',
+        'singular_name' => 'Venom-vote',
+        'menu_name' => 'Venom-votes',
+        'name_admin_bar' => 'Venom-vote'
     );
 
     $args = array(
@@ -154,23 +154,22 @@ function venom_custom_post_type()
 
 function venom_set_columns_name($columns)
 {
-    $clientColumns = array();
-    $clientColumns['cb'] = "<input type=\"checkbox\" />";
-    $clientColumns['title'] = 'Full Name';
-    $clientColumns['nickname'] = 'Nick Name';
-    $clientColumns['state'] = 'State';
-    $clientColumns['age'] = 'Age';
-    $clientColumns['occupation'] = 'Occupation';
-    $clientColumns['votes'] = 'Number of votes';
-    $clientColumns['taxonomy'] = 'Contest Category';
-    $clientColumns['profile_picture'] = 'Profile Picture';
+    $clientColumns = array(
+        'cb' => "<input type=\"checkbox\" />",
+        'title' => 'Full Name',
+        'nickname' => 'Nick Name',
+        'state' => 'State',
+        'age' => 'Age',
+        'occupation' => 'Occupation',
+        'votes' => 'Number of votes',
+        'taxonomy' => 'Contest Category',
+    );
     return $clientColumns;
 }
 
-function venom_custom_columns($column, $post_id)
+function venom_custom_columns($columns, $post_id)
 {
-
-    switch ($column) {
+    switch ($columns) {
         case 'nickname':
             $value = get_post_meta($post_id, '_venom_nickname_value_key', true);
             echo '<strong>' . $value . '</strong>';
@@ -205,15 +204,6 @@ function venom_custom_columns($column, $post_id)
             $on_draught = join(", ", $draught_links);
             printf($on_draught);
             break;
-
-        case 'profile_picture':
-            $profile_picture = get_post_meta($post_id, '_venom_profile_picture_key', true);
-            if (!empty($profile_picture)) {
-                echo '<img src="' . esc_url($profile_picture) . '" style="max-width: 100px; max-height: 100px;" />';
-            } else {
-                echo 'No Picture';
-            }
-            break;
     }
 }
 
@@ -224,13 +214,13 @@ function venom_add_meta_box()
     add_meta_box('venom_votes', 'Number of Votes', 'venom_vote_callback', 'venom', 'normal');
     add_meta_box('venom_state', 'State', 'venom_state_callback', 'venom', 'normal');
     add_meta_box('venom_occupation', 'Occupation', 'venom_occupation_callback', 'venom', 'normal');
-    add_meta_box('venom_profile_picture', 'Profile Picture', 'venom_profile_picture_callback', 'venom', 'normal');
 }
 
 function venom_nickname_callback($post)
 {
     wp_nonce_field('venom_save_nickname_data', 'venom_nickname_meta_box_nonce');
     $value = get_post_meta($post->ID, '_venom_nickname_value_key', true);
+
     echo '<label for="venom_nickname_field"> Nick Name </label><br><br> ';
     echo '<input type="text" name="venom_nickname_field" id="venom_nickname_field" value="' . esc_attr($value) . '" size="25"/>';
 }
@@ -239,7 +229,9 @@ function venom_vote_callback($post)
 {
     wp_nonce_field('venom_save_vote_data', 'venom_vote_meta_box_nonce');
     $value = get_post_meta($post->ID, '_venom_vote_value_key', true);
+
     $final_value = (!empty($value)) ? $value : 0;
+
     echo '<label for="venom_vote_field"> Number of Votes </label><br><br> ';
     echo '<input type="number" name="venom_vote_field" id="venom_vote_field" value="' . esc_attr($final_value) . '" size="25"/>';
 }
@@ -248,6 +240,7 @@ function venom_age_callback($post)
 {
     wp_nonce_field('venom_save_age_data', 'venom_age_meta_box_nonce');
     $value = get_post_meta($post->ID, '_venom_age_value_key', true);
+
     echo '<label for="venom_age_field"> Ages </label><br><br> ';
     echo '<input type="number" name="venom_age_field" id="venom_age_field" value="' . esc_attr($value) . '" size="25"/>';
 }
@@ -256,6 +249,7 @@ function venom_state_callback($post)
 {
     wp_nonce_field('venom_save_state_data', 'venom_state_meta_box_nonce');
     $value = get_post_meta($post->ID, '_venom_state_value_key', true);
+
     echo '<label for="venom_state_field"> Name of State </label><br><br> ';
     echo '<input type="text" name="venom_state_field" id="venom_state_field" value="' . esc_attr($value) . '" size="25"/>';
 }
@@ -264,20 +258,9 @@ function venom_occupation_callback($post)
 {
     wp_nonce_field('venom_save_occupation_data', 'venom_occupation_meta_box_nonce');
     $value = get_post_meta($post->ID, '_venom_occupation_value_key', true);
+
     echo '<label for="venom_occupation_field"> Occupation </label><br><br> ';
     echo '<input type="text" name="venom_occupation_field" id="venom_occupation_field" value="' . esc_attr($value) . '" size="25"/>';
-}
-
-function venom_profile_picture_callback($post)
-{
-    wp_nonce_field('venom_save_profile_picture_data', 'venom_profile_picture_nonce');
-    $profile_picture = get_post_meta($post->ID, '_venom_profile_picture_key', true);
-    echo '<label for="venom_profile_picture_field">Upload Profile Picture:</label>';
-    echo '<input type="file" id="venom_profile_picture_field" name="venom_profile_picture_field" value="" accept="image/*">';
-    echo '<br>';
-    if (!empty($profile_picture)) {
-        echo '<img src="' . esc_url($profile_picture) . '" style="max-width: 200px; max-height: 200px;" />';
-    }
 }
 
 function venom_save_nickname_data($post_id)
@@ -394,46 +377,3 @@ function venom_save_vote_data($post_id)
 
     update_post_meta($post_id, '_venom_vote_value_key', $my_data);
 }
-
-function venom_save_profile_picture_data($post_id)
-{
-    if (!isset($_POST['venom_profile_picture_nonce'])) {
-        return;
-    }
-    if (!wp_verify_nonce($_POST['venom_profile_picture_nonce'], 'venom_save_profile_picture_data')) {
-        return;
-    }
-    if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
-        return;
-    }
-    if (!current_user_can('edit_post', $post_id)) {
-        return;
-    }
-
-    if (!empty($_FILES['venom_profile_picture_field']['name'])) {
-        $file = $_FILES['venom_profile_picture_field'];
-        $upload_overrides = array('test_form' => false);
-        $uploaded_file = wp_handle_upload($file, $upload_overrides);
-
-        if (!isset($uploaded_file['error'])) {
-            $upload_dir = wp_upload_dir();
-            $image_data = array(
-                'post_title' => sanitize_file_name($file['name']),
-                'post_type' => 'attachment',
-                'post_content' => '',
-                'post_parent' => $post_id,
-                'post_mime_type' => $file['type'],
-                'guid' => $uploaded_file['url']
-            );
-
-            $attach_id = wp_insert_attachment($image_data, $uploaded_file['file'], $post_id);
-
-            if (!is_wp_error($attach_id)) {
-                update_post_meta($post_id, '_venom_profile_picture_key', $uploaded_file['url']);
-            }
-        }
-    }
-}
-
-?>
-
