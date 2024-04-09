@@ -32,7 +32,7 @@
 
         .vote-item a{
             padding-bottom:20px;
-            background-color: rgb(129, 204, 18);
+            background-color: #F5D429;
             padding-top:10px;
             width:100%;
             text-decoration: none;
@@ -42,19 +42,19 @@
             color: white;
             font-size: 24px;
             font-weight: bold;
-               
+            cursor: pointer;   
         }   
          
         @media(max-width:600px){
-         div.container{grid-template-columns:repeat(1, 1fr);}
+         .tp-vote-container{grid-template-columns:repeat(1, 1fr);}
         }
         
         @media(min-width:768px){
-         div.container{grid-template-columns:repeat(3, 1fr);}
+         .tp-vote-container{grid-template-columns:repeat(3, 1fr);}
         }
         
         @media(min-width:928px){
-         div.container{grid-template-columns:repeat(4, 1fr);}
+         .tp-vote-container{grid-template-columns:repeat(4, 1fr);}
         }
         
                 
@@ -109,6 +109,7 @@
             visibility: hidden;
             transform: scale(1.1);
             transition: visibility 0s linear 0.25s, opacity 0.25s 0s, transform 0.25s;
+            z-index: 99;
         }
 
         .venom-modal-content {
@@ -118,7 +119,7 @@
             transform: translate(-50%, -50%);
             background-color: white;
             padding: 1rem 1.5rem;
-            width: 24rem;
+            width: 50%;
             border-radius: 0.5rem;
         }
 
@@ -129,11 +130,6 @@
             text-align: center;
             cursor: pointer;
             border-radius: 0.25rem;
-            background-color: rgb(206, 235, 197);
-        }
-
-        .venom-close-button:hover {
-            background-color: rgb(244, 247, 243);
         }
 
         .venom-show-modal {
