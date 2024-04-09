@@ -1,10 +1,8 @@
     <style>
         .tp-vote-container {
-            margin: 20px;
-            padding:20px;
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
+            gap: 15px;
             justify-content: center;
         }
 
@@ -14,19 +12,16 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            border: 1px solid #F5D429;
-                
-            
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);  
+            overflow: hidden;
         }
 
-        .vote-item img{
-            padding:20px;
-            border-radius: 5px;
-        }
-
-        .vote-item span{
-            padding-bottom:10px;
+        .vote-item-title{
+            margin-bottom: 24px;
             font-size: 25px;
+            font-weight: 600;
+            line-height: 32.78px;
+            color: #191d23;
         }
 
         .vote-item a{
@@ -40,7 +35,7 @@
             flex-direction: column;
             color: white;
             font-size: 24px;
-            font-weight: bold;
+            font-weight: 600;
             cursor: pointer;   
         }   
          
@@ -55,14 +50,9 @@
         @media(min-width:928px){
          .tp-vote-container{grid-template-columns:repeat(4, 1fr);}
         }
-        
-                
-
 
         .vote-item a:hover{
-            
             background-color: #F5D429;
-            
         }
 
         .vote-item-img {
@@ -71,7 +61,16 @@
         }
 
         .vote-item-img img {
-            width: 100%;
+            height: 100%;
+            width: auto;
+            object-fit: cover;
+        }
+
+        .vote-item-count {
+            font-size: 16px;
+            line-height: 20px;
+            font-weight: 600;
+            color: #4A4948;
         }
 
         section.tp-search-bar {
@@ -97,12 +96,10 @@
             background-color: rgb(133, 209, 18);
             border: 1px solid grey;
             border-radius: 5px;
-            
         }
 
         section.tp-search-bar button:hover{
             cursor: pointer;
-            
             background-color: rgb(104, 170, 4);
         }
 
@@ -193,13 +190,15 @@
             <div class="vote-item-img">
                 <img src="<?php echo esc_url($profile_image); ?>" alt="<?php the_title(); ?>">
             </div>
-            <span><?php the_title(); ?></span>
+            <h4 class="vote-item-title"><?php the_title(); ?></h4>
             <?php if(get_option('venom_display_state') == 1): ?>
-            <span>State: <?php echo $state; ?></span>
+            <p>State: <?php echo $state; ?></p>
             <?php endif; ?>
-            <?php if(get_option('venom_display_vote') == 1): ?>
-            <span>Votes: <?php echo $vote; ?></span>
-            <?php endif; ?>
+            <div class="vote-item-count">
+                <?php if(get_option('venom_display_vote') == 1): ?>
+                <span>Votes: <?php echo $vote; ?></span>
+                <?php endif; ?>
+            </div>
             <a class="venom-trigger" id="vote-<?php print get_the_ID(); ?>" onclick="return venomWVWPMForm(<?php print get_the_ID(); ?>)">Vote Now</a>
         </div>
 
