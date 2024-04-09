@@ -42,8 +42,23 @@
             color: white;
             font-size: 24px;
             font-weight: bold;
-
+               
+        }   
+         
+        @media(max-width:600px){
+         div.container{grid-template-columns:repeat(1, 1fr);}
         }
+        
+        @media(min-width:768px){
+         div.container{grid-template-columns:repeat(3, 1fr);}
+        }
+        
+        @media(min-width:928px){
+         div.container{grid-template-columns:repeat(4, 1fr);}
+        }
+        
+                
+
 
         .vote-item a:hover{
             
