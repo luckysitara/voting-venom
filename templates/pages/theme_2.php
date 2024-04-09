@@ -20,7 +20,6 @@
         }
 
         .vote-item img{
-            max-width:320px;
             padding:20px;
             border-radius: 5px;
         }
@@ -62,8 +61,17 @@
 
         .vote-item a:hover{
             
-            background-color: rgb(104, 170, 4);
+            background-color: #F5D429;
             
+        }
+
+        .vote-item-img {
+            height: 300px;
+            overflow: hidden;
+        }
+
+        .vote-item-img img {
+            width: 100%;
         }
 
         section.tp-search-bar {
@@ -182,7 +190,9 @@
 
         <div class="vote-item">
             <?php the_post_thumbnail(); ?>
-            <img src="<?php echo esc_url($profile_image); ?>" alt="<?php the_title(); ?>">
+            <div class="vote-item-img">
+                <img src="<?php echo esc_url($profile_image); ?>" alt="<?php the_title(); ?>">
+            </div>
             <span><?php the_title(); ?></span>
             <?php if(get_option('venom_display_state') == 1): ?>
             <span>State: <?php echo $state; ?></span>
