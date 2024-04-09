@@ -17,11 +17,16 @@
         }
 
         .vote-item-title{
-            margin-bottom: 24px;
+            margin-top: 15px;
+            margin-bottom: 20px;
             font-size: 25px;
             font-weight: 600;
             line-height: 32.78px;
             color: #191d23;
+            text-transform: capitalize;
+            display: block;
+            text-align: center;
+            width: 100%;
         }
 
         .vote-item a{
@@ -67,10 +72,14 @@
         }
 
         .vote-item-count {
-            font-size: 16px;
+            font-size: 20px;
             line-height: 20px;
             font-weight: 600;
             color: #4A4948;
+            margin-bottom: 16px;
+            display: block;
+            text-align: center;
+            width: 100%;
         }
 
         section.tp-search-bar {
