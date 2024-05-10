@@ -9,7 +9,7 @@ function venom_add_admin_page() {
 
     //Admin page
 
-	add_submenu_page( 'edit.php?post_type=venom', 'Easy Wp Voting Settings', 'Settings', 'manage_options', 'venom_plugin', 'venom_setting_page');
+	add_submenu_page( 'edit.php?post_type=venom', 'Voting Venom Settings', 'Settings', 'manage_options', 'venom_plugin', 'venom_setting_page');
 
     //Activate Custom Setting
 
